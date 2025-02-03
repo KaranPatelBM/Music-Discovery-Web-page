@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a **Music Discovery Webpage** built using **React.js**. The main goal of this application is to provide users with the ability to explore trending music, discover new songs, albums, and artists. The data is sourced from the **Last.fm API**, which provides information about the most popular tracks across the world.
+This project is a **Music Discovery Webpage(Karna)** built using **React.js**. The main goal of this application is to provide users with the ability to explore trending music, discover new songs, albums, and artists. The data is sourced from the **Last.fm API**, which provides information about the most popular tracks across the world.
 
 ## Key Features
 
@@ -32,6 +32,8 @@ This web application uses React's **useState** and **useEffect** hooks to manage
 4. Start the development server:
 
 The app will be available at `http://localhost:5174`.
+## Screenshot
+![Screenshot (1)](https://github.com/user-attachments/assets/05105549-f51b-4723-9842-f0c5889b0af3)
 
 ## Acknowledgments
 Last.fm API: Provides the music data for this application.
