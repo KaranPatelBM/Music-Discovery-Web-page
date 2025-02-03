@@ -33,14 +33,14 @@ This web application uses React's **useState** and **useEffect** hooks to manage
 
 The app will be available at `http://localhost:5174`.
 
+## Acknowledgments
+Last.fm API: Provides the music data for this application.
+React.js: A JavaScript library for building user interfaces
+
 ## Environment Variables
 
 The application makes use of the **Last.fm API** to fetch music data. You will need to replace the placeholder API key in `HomePage.jsx` with your own API key.
 
 ```javascript
 const apiKey = 'YOUR_LASTFM_API_KEY'; // Replace with your actual API key
-
-## Acknowledgments
-Last.fm API: Provides the music data for this application.
-React.js: A JavaScript library for building user interfaces.
-
+.
