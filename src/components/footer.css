@@ -1,0 +1,57 @@
+/* footer.css */
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0; /* Ensure the footer is aligned to the left */
+  width: 100%; /* Ensures it covers the entire width */
+  background-color: #282c34;
+  color: white;
+  padding: 10px 30px; /* Padding on left and right for spacing */
+  display: flex;
+  justify-content: flex-end; /* Keeps social links aligned to the right */
+  align-items: center; /* Vertically centers the content */
+  box-sizing: border-box; /* Ensures padding is included in width calculation */
+}
+
+.social-links {
+  display: flex;
+  gap: 15px; /* Space between links */
+}
+
+.social-links a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.social-links img {
+  width: 24px;
+  height: 24px;
+  margin-right: 5px; /* Space between image and text */
+}
+
+.social-links a:hover img {
+  opacity: 0.8; /* Slight opacity change on hover */
+}
+
+@media (max-width: 768px) {
+  footer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  nav {
+    margin-top: 10px;
+  }
+
+  nav a {
+    margin-bottom: 8px;
+  }
+}
+
+/* Class to hide the footer */
+footer.hidden {
+  bottom: -80px; /* Moves the footer down out of view */
+}

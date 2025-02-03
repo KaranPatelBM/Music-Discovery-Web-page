@@ -1,0 +1,120 @@
+/* signIn.css */
+
+/* Gradient background for the entire page (excluding header) */
+body {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(169, 169, 169, 0.4));
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Ensure the header stays fixed at the top */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #282c34;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Sign In content */
+  .sign-in-container {
+    margin-top: 100px; /* Adjust for header height */
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 80vh; /* Ensures it takes at least 80% of the viewport height */
+  }
+  
+  /* Headings styling */
+  .sign-in-container h2 {
+    font-size: 2rem;
+    margin: 20px 0;
+    color: #fff;
+  }
+  
+  /* Form styling */
+  .sign-in-form {
+    width: 100%;
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Label and input styling */
+  .sign-in-form label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #fff;
+  }
+  
+  .sign-in-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1rem;
+  }
+  
+  /* Submit button styling */
+  .sign-in-form button {
+    background-color: #282c34;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+  }
+  
+  .sign-in-form button:hover {
+    background-color: #3e444a;
+  }
+  
+  /* Hide footer for the SignIn page */
+  footer {
+    display: none;
+  }
+  
+  /* Search box styling (same as in home.css) */
+  .search-container {
+    position: fixed;
+    top: 100px; /* Adjust so it appears below the header */
+    right: 20px;
+    z-index: 999;
+  }
+  
+  .search-box {
+    padding: 10px;
+    width: 250px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .search-box:focus {
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  

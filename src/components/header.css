@@ -1,0 +1,47 @@
+/* header.css */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 15px; /* Increase padding by 10px (original padding was 5px) */
+    background-color: #282c34;
+    color: white;
+  }
+  
+  .header-left h1 {
+    margin: 0;
+    font-size: 1.5rem; /* Reduced font size for the website name */
+    color: red; /* Set the color of the website name to red */
+  }
+  
+  nav {
+    display: flex;
+    gap: 25px; /* Increased space between links */
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem; /* Reduced font size for links */
+  }
+  
+  nav a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Optional: If you want to reduce space further on smaller screens */
+  @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    nav {
+      margin-top: 10px;
+    }
+  
+    nav a {
+      margin-bottom: 8px;
+    }
+  }
+  
