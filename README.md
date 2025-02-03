@@ -33,7 +33,8 @@ This web application uses React's **useState** and **useEffect** hooks to manage
 
 The app will be available at `http://localhost:5174`.
 ## Screenshot
-![Screenshot (1)](https://github.com/user-attachments/assets/05105549-f51b-4723-9842-f0c5889b0af3)
+![Karna Music Discovery](https://github.com/user-attachments/assets/c73a81b4-3b73-48a7-ad57-ea4fb38d8a4e)
+
 
 ## Acknowledgments
 Last.fm API: Provides the music data for this application.
