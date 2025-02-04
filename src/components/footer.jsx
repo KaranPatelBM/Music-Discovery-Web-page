@@ -13,10 +13,16 @@ const Footer = () => {
   };
 
   useEffect(() => {
-    // Add the scroll event listener
+    const handleScroll = () => {
+      console.log(window.scrollY);  // Debug the scroll position
+      if (window.scrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+    };
+  
     window.addEventListener('scroll', handleScroll);
-
-    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };

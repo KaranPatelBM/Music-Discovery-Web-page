@@ -3,15 +3,16 @@
 footer {
   position: fixed;
   bottom: 0;
-  left: 0; /* Ensure the footer is aligned to the left */
-  width: 100%; /* Ensures it covers the entire width */
+  left: 0;
+  width: 100%;
   background-color: #282c34;
   color: white;
-  padding: 10px 30px; /* Padding on left and right for spacing */
+  padding: 10px 30px;
   display: flex;
-  justify-content: flex-end; /* Keeps social links aligned to the right */
-  align-items: center; /* Vertically centers the content */
-  box-sizing: border-box; /* Ensures padding is included in width calculation */
+  justify-content: flex-end;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 9999; /* Ensure it stays on top of other content */
 }
 
 .social-links {
