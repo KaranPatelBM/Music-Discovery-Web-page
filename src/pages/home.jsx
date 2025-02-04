@@ -9,7 +9,7 @@ const HomePage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [searchTerm, setSearchTerm] = useState(''); 
 
-  const apiKey = process.env.LAST-FM; // Replace with your actual API key
+  const apiKey = process.env.REACT_APP_LAST_FM_API_KEY;; // Replace with your actual API key
 
   // Fetch trending music data on component mount
   useEffect(() => {
