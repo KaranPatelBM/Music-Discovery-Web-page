@@ -16,10 +16,10 @@ pipeline {
                 }
             }
         }
-        stage('trigger test build job') {
-            // steps {
-            //     build job: 'another-pipeline-job', wait: false
-            // }
-        }
+        // stage('trigger test build job') {
+        //     steps {
+        //         build job: 'another-pipeline-job', wait: false
+        //     }
+        // }
     }
 }
