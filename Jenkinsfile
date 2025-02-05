@@ -17,10 +17,10 @@ pipeline {
                 }
             }
         }
-        // stage('trigger test build job') {
-        //     steps {
-        //         build job: 'another-pipeline-job', wait: false
-        //     }
-        // }
+        stage('Trigger Playwright Test Build Job') {
+            steps {
+                build job: 'Playwright-Music-Discovery/job/master', wait: false
+            }
+        }
     }
 }
