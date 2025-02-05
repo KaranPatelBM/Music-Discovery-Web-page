@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Trigger Playwright Test Build Job') {
             steps {
-                build job: 'http://localhost:8090/job/Playwright-Music-Discovery/job/master/', wait: false
+                build job: 'Playwright-Music-Discovery/master', wait: false
             }
         }
     }
