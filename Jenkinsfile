@@ -4,15 +4,15 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
-                    sh 'npm run dev'
+                    bat 'npm run dev'
                 }
             }
         }
         stage('Lint and Build') {
             steps {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
-                    sh 'npm run lint'
-                    sh 'npm run build'
+                    bat 'npm run lint'
+                    bat 'npm run build'
                 }
             }
         }
