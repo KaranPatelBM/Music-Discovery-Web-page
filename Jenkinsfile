@@ -5,7 +5,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
                     bat 'npm install'
-                    bat 'npm run dev'
+                    bat 'start /B npm run dev'
                 }
             }
         }
