@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './styles/home.css';
 
@@ -38,7 +38,7 @@ const HomePage = () => {
     };
 
     fetchMusicData();
-  }, []); // Empty dependency array ensures this runs once when the component mounts
+  }, [apiKey]); // Empty dependency array ensures this runs once when the component mounts
 
   // Function to handle play/pause of the audio
   const handlePlayPause = (track) => {

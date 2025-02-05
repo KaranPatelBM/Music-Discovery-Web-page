@@ -1,16 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './footer.css'; // Import the footer CSS file
 
 const Footer = () => {
   const [isVisible, setIsVisible] = useState(true);
-
-  const handleScroll = () => {
-    if (window.scrollY > 100) { // When scroll position is more than 100px, hide the footer
-      setIsVisible(false);
-    } else {
-      setIsVisible(true);
-    }
-  };
 
   useEffect(() => {
     const handleScroll = () => {
