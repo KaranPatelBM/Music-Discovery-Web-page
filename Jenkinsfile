@@ -28,16 +28,19 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            script {
-                // After Playwright job completes, kill the current build if necessary
-                def pid = currentBuild.description
-                if (pid) {
-                    bat "taskkill /PID ${pid} /F"
-                    echo "Killed process with PID: ${pid}"
-                }
+post {
+    always {
+        script {
+            def pid = currentBuild.description
+
+            if (pid && pid.isInteger()) {
+                bat "taskkill /PID ${pid} /F"
+                echo "Killed process with PID: ${pid}"
+            } else {
+                echo "No valid PID found or process is not running."
             }
         }
     }
+}
+
 }
