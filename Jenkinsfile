@@ -5,7 +5,12 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
                     bat 'npm install'
-                    bat 'start /B npm run dev'
+                    script {
+                        bat 'start /B npm run dev'
+                        def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
+                        echo "Started process with PID: ${processId}"
+                        currentBuild.description = processId
+                    }
                 }
             }
         }
@@ -19,7 +24,19 @@ pipeline {
         }
         stage('Trigger Playwright Test Build Job') {
             steps {
-                build job: 'Playwright-Music-Discovery/master', wait: false
+                build job: 'Playwright-Music-Discovery/master', wait: true
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                // After Playwright job completes, kill the current build if necessary
+                def pid = currentBuild.description
+                if (pid) {
+                    bat "taskkill /PID ${pid} /F"
+                    echo "Killed process with PID: ${pid}"
+                }
             }
         }
     }
