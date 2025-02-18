@@ -39,11 +39,13 @@ pipeline {
             steps {
                 script {
                     bat "docker pull ${env.imageTag}"
-                    // Run the Docker container in the background (map port 8563 from container to host)
                     bat """
-                        docker ps -a -q -f name=${CONTAINER_NAME} | grep -q . && docker rm -f ${CONTAINER_NAME}
+                        set CONTAINER_ID=\\$(docker ps -a -q -f name=${CONTAINER_NAME})
+                        if not "%CONTAINER_ID%"=="" (
+                            docker rm -f ${CONTAINER_NAME}
+                        )
                         docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
-                    """                    
+                        """
                     sleep 15
                 }
             }
