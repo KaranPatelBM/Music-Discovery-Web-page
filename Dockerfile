@@ -11,6 +11,8 @@ RUN npm install
 
 COPY . /app/Music-Discovery-Web-page
 
+WORKDIR /app/Music-Discovery-Web-page
+
 EXPOSE 8563
 
 RUN npm run build
