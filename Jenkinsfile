@@ -8,7 +8,9 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the repository
-                git branch: 'main', url: "${GIT_URL}"
+                withCredentials([string(credentialsId: 'GIT_URL_CREDENTIAL', variable: 'GIT_URL')]) {               
+                    git branch: 'main', url: "${GIT_URL}"
+                }
             }
         }
         stage('Get Current Version') {
