@@ -40,7 +40,7 @@ pipeline {
                 script {
                     bat "docker pull ${env.imageTag}"
                     bat """
-                        set CONTAINER_ID=\\$(docker ps -a -q -f name=${CONTAINER_NAME})
+                        set CONTAINER_ID=$$(docker ps -a -q -f name=${CONTAINER_NAME})
                         if not "%CONTAINER_ID%"=="" (
                             docker rm -f ${CONTAINER_NAME}
                         )
