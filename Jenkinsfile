@@ -8,7 +8,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the repository
-                withCredentials([string(credentialsId: 'GIT_URL_CREDENTIAL', variable: 'GIT_URL')]) {               
+                withCredentials([string(credentialsId: 'GIT_URL', variable: 'GIT_URL')]) {               
                     git branch: 'main', url: "${GIT_URL}"
                 }
             }
