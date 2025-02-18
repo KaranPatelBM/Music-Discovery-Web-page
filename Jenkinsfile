@@ -23,9 +23,11 @@ pipeline {
             steps {
                 script {
                      withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        bat "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin"
-                        env.imageTag = "$DOCKER_USER/${IMAGE_NAME}:${env.VERSION_TAG}"
-                        bat "docker build -t  ${env.imageTag}."                    
+                        bat """
+                            echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
+                        """
+                        env.imageTag = "${DOCKER_USER}/${IMAGE_NAME}:${env.VERSION_TAG}"
+                        bat "docker build -t ${env.imageTag} ."
                     }
 
                     //Push image
