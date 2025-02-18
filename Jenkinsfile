@@ -28,11 +28,10 @@ pipeline {
                         """
                         env.imageTag = "${DOCKER_USER}/${IMAGE_NAME}:${env.VERSION_TAG}"
                         bat "docker build -t ${env.imageTag} ."
+                        docker.withRegistry("https://registry.hub.docker.com", 'DOCKER_CREDENTIALS') {
+                            bat "docker push ${env.imageTag}"
+                        }                        
                     }
-
-                    //Push image
-                    docker.withRegistry("https://registry.hub.docker.com") {
-                        docker.image(env.imageTag).push()
                     }
                 }
             }
