@@ -2,26 +2,24 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = "music-discovery-app"
-        DOCKER_REGISTRY = "https://registry.hub.docker.com"
-        DOCKER_USERNAME = "karanpatebm"
+        CONTAINER_NAME = "${IMAGE_NAME}-container"
     }
     stages {
         stage('Checkout') {
             steps {
                 // Checkout the repository
-                git branch: 'main', url: ""
+                git branch: 'main', url: "${GIT_URL}"
             }
         }
         stage('Get Current Version') {
             steps {
-                script {
+               script {
                     // Use Jenkins build number to generate version
                     def defaultVersion = "v1"
                     def buildNumber = env.BUILD_NUMBER.toInteger()
                     def minorVersion = buildNumber % 100 // Keep the version in the format v1, v1.01, v1.02, ...
-                    def versionTag = "${defaultVersion}.${String.format('%02d', defaultVersion)}"
+                    def versionTag = "${defaultVersion}.${String.format('%02d', minorVersion)}"
 
-                    // Set the current version as an environment variable
                     env.VERSION_TAG = versionTag
                     echo "Current version: ${versionTag}"
                 }
@@ -30,12 +28,15 @@ pipeline {
         stage('Build & Push Docker Image') {
             steps {
                 script {
-                    def imageTag = "${DOCKER_USERNAME}/${IMAGE_NAME}:${env.VERSION_TAG}"
-                    bat "docker build -t  ${imageTag}."
+                     withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        bat "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin"
+                        env.imageTag = "$DOCKER_USER/${IMAGE_NAME}:${env.VERSION_TAG}"
+                        bat "docker build -t  ${env.imageTag}."                    
+                    }
 
                     //Push image
-                    docker.withRegistry(${DOCKER_REGISTRY}, "${dockerhub-credentials}") {
-                        docker.image(imageTag).push()
+                    docker.withRegistry("https://registry.hub.docker.com") {
+                        docker.image(env.imageTag).push()
                     }
                 }
             }
@@ -43,8 +44,12 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
+                    bat "docker pull ${env.imageTag}"
                     // Run the Docker container in the background (map port 8563 from container to host)
-                    bat 'docker run -d -p 8563:8563 --name music-discovery-app music-discovery-app'
+                    bat """
+                        docker ps -a -q -f name=${CONTAINER_NAME} | grep -q . && docker rm -f ${CONTAINER_NAME}
+                        docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
+                    """                    
                     sleep 15
                 }
             }
