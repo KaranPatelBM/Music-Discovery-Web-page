@@ -22,7 +22,7 @@ pipeline {
         stage('Build & Push Docker Image') {
             steps {
                 script {
-                     withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
                         bat """
                             echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
                         """
@@ -31,7 +31,6 @@ pipeline {
                         docker.withRegistry("https://registry.hub.docker.com", 'DOCKER_CREDENTIALS') {
                             bat "docker push ${env.imageTag}"
                         }                        
-                    }
                     }
                 }
             }
