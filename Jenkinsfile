@@ -49,9 +49,9 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
-                    bat 'npm install'
                     script {
-                        bat 'start /B npm run dev'
+                        bat "docker exec ${CONTAINER_NAME} npm install"
+                        bat "docker exec ${CONTAINER_NAME} npm run dev"
                         def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
                         echo "Started process with PID: ${processId}"
                         currentBuild.description = processId
