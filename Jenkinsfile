@@ -40,7 +40,7 @@ pipeline {
                 script {
                     bat "docker pull ${env.imageTag}"
                     bat """
-                         powershell -Command "docker ps -a -q -f name=${CONTAINER_NAME} | ForEach-Object { docker rm -f $_ }"
+                        docker ps -a -q -f name=${CONTAINER_NAME} | if (\$(test -n "\$(cat)")) { docker rm -f \$(cat) }
                     """
                     bat """
                         docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
