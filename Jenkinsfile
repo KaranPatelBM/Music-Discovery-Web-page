@@ -5,15 +5,6 @@ pipeline {
         CONTAINER_NAME = "${IMAGE_NAME}-container"
     }
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the repository
-                withCredentials([string(credentialsId: 'GIT_URL', variable: 'GIT_URL')]) {                
-                    echo "Cloning repository from: ${GIT_URL}"
-                    git branch: 'main', url: "${GIT_URL}"
-                }
-            }
-        }
         stage('Get Current Version') {
             steps {
                script {
