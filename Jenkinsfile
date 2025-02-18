@@ -40,7 +40,7 @@ pipeline {
                 script {
                     bat "docker pull ${env.imageTag}"
                     bat """
-                        docker ps -a -q -f name=${CONTAINER_NAME} | if (\$(test -n "\$(cat)")) { docker rm -f \$(cat) }
+                        for /f "delims=" %%i in ('docker ps -a -q -f name=${CONTAINER_NAME}') do docker rm -f %%i
                     """
                     bat """
                         docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
