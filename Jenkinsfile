@@ -39,15 +39,9 @@ pipeline {
             steps {
                 script {
                     bat "docker pull ${env.imageTag}"                    
-                    def containerExists = bat(script: "docker ps -a --filter \"name=${CONTAINER_NAME}\" --format \"{{.Names}}\"", returnStdout: true).trim()
-                    if(containerExists){
-                        bat "docker stop ${CONTAINER_NAME}"
-                        bat "docker rm ${CONTAINER_NAME}"
-                    }else{
                         bat """
                             docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
                         """
-                    }
                     sleep 15
                 }
             }
