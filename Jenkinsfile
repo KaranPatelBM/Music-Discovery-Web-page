@@ -38,13 +38,16 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    bat "docker pull ${env.imageTag}"
-                    bat """
-                        for /f "delims=" %%i in ('docker ps -a -q -f name=${CONTAINER_NAME}') do docker rm -f %%i
-                    """
-                    bat """
-                        docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
+                    bat "docker pull ${env.imageTag}"                    
+                    def containerExists = bat(script: "docker pa -a --filter \"name=${CONTAINER_NAME}\" --format \"{{.Names}}\"", returnStdout: true).trim()
+                    if(containerExists){
+                        bat "docker stop ${CONTAINER_NAME}"
+                        bat "docker rm ${CONTAINER_NAME}"
+                    }else{
+                        bat """
+                            docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
                         """
+                    }
                     sleep 15
                 }
             }
