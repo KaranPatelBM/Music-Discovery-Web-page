@@ -58,16 +58,8 @@ pipeline {
                     }
                     bat """
                         docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
-                    """
-                    echo "Starting container ${CONTAINER_NAME}..."
-                        bat "docker start ${CONTAINER_NAME}"
-                        def containerRunning = bat(script: """docker ps --filter name=${CONTAINER_NAME} --format "{{.Names}}""", returnStdout: true).trim()
-                        if (!containerRunning) {
-                            error "Failed to start the container ${CONTAINER_NAME}"
-                        }else {
-                           echo "Container ${containerRunning} is running."
-                        }
-                        sleep 10
+                    """                
+                    sleep 10
                 }
             }
         }

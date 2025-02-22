@@ -16,3 +16,5 @@ WORKDIR /app/Music-Discovery-Web-page
 EXPOSE 8563
 
 RUN npm run build
+
+CMD ["npm", "run", "dev"]
