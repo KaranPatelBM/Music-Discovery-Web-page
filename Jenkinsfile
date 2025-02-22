@@ -67,7 +67,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
                     script {
-                        def containerRunning = bat(script: "docker ps --filter name=${CONTAINER_NAME} --format \"{{.Names}}\"", returnStdout: true).trim()
+                        def containerRunning = bat(script: """docker ps --filter name=${CONTAINER_NAME} --format "{{.Names}}""", returnStdout: true).trim()
                         echo "containerRunning: ${containerRunning}"
                         if (!containerRunning) {
                             // If the container is not running, start it
