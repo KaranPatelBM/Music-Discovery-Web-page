@@ -6,9 +6,11 @@ pipeline {
     }
     stages {
         stage('Git Checkout') {
-            script {
-                withCredentials([string(credentialsId: 'GIT_URL', variable: 'GIT_URL_SECRET')]) {                    
-                    git branch: 'main', url: "${env.GIT_URL_SECRET}"
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'GIT_URL', variable: 'GIT_URL_SECRET')]) {                    
+                        git branch: 'main', url: "${env.GIT_URL_SECRET}"
+                    }
                 }
             }
         }
