@@ -67,17 +67,8 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
                     script {
-                        def containerRunning = bat(script: "docker ps --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
-                        echo "containerRunning: ${containerRunning}"
-                        if (!containerRunning || containerRunning == '') {
-                            // If the container is not running, start it
-                            echo "Starting container ${CONTAINER_NAME}..."
-                            bat "docker start ${CONTAINER_NAME}"
-                            containerRunning = bat(script: "docker ps --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
-                            if (!containerRunning) {
-                                error "Failed to start container ${CONTAINER_NAME}"
-                            }
-                        }
+                        echo "Starting container ${CONTAINER_NAME}..."
+                        bat "docker start ${CONTAINER_NAME}"
                         bat "docker exec ${CONTAINER_NAME} npm install"
                         bat "docker exec ${CONTAINER_NAME} npm run dev"
                         def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
