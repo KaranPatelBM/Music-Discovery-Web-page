@@ -67,14 +67,8 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
                     script {
-                        def containerRunning = bat(script: """docker ps --filter name=${CONTAINER_NAME} --format "{{.Names}}""", returnStdout: true).trim()
+                        def containerRunning = bat(script: "docker ps --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
                         echo "containerRunning: ${containerRunning}"
-                        while (containerRunning == '' && retries < 10) {
-                            echo "Container ${CONTAINER_NAME} is not yet running. Retrying..."
-                            sleep 5
-                            containerRunning = bat(script: """docker ps --filter name=${CONTAINER_NAME} --format "{{.Names}}""", returnStdout: true).trim()
-                            retries++
-                        }
                         if (!containerRunning || containerRunning == '') {
                             // If the container is not running, start it
                             echo "Starting container ${CONTAINER_NAME}..."
