@@ -69,6 +69,13 @@ pipeline {
                     script {
                         echo "Starting container ${CONTAINER_NAME}..."
                         bat "docker start ${CONTAINER_NAME}"
+                        def containerRunning = bat(script: """docker ps --filter name=${CONTAINER_NAME} --format "{{.Names}}""", returnStdout: true).trim()
+                        if (!containerRunning) {
+                            error "Failed to start the container ${CONTAINER_NAME}"
+                        }else {
+                           echo "Container ${CONTAINER_NAME} is running."
+                        }
+                        sleep 10
                         bat "docker exec ${CONTAINER_NAME} npm install"
                         bat "docker exec ${CONTAINER_NAME} npm run dev"
                         def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
