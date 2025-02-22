@@ -58,7 +58,10 @@ pipeline {
                     }
                     bat """
                         docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
-                    """                
+                    """
+                    def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
+                    echo "Started process with PID: ${processId}"
+                    currentBuild.description = processId
                     sleep 10
                 }
             }
@@ -68,9 +71,6 @@ pipeline {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
                     bat 'npm run lint'
                     bat 'npm run build'
-                    def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
-                    echo "Started process with PID: ${processId}"
-                    currentBuild.description = processId
                 }
             }
         }
