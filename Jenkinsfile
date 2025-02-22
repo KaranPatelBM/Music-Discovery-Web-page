@@ -59,15 +59,7 @@ pipeline {
                     bat """
                         docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
                     """
-                    sleep 15
-                }
-            }
-        }
-        stage('Build') {
-            steps {
-                withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
-                    script {
-                        echo "Starting container ${CONTAINER_NAME}..."
+                    echo "Starting container ${CONTAINER_NAME}..."
                         bat "docker start ${CONTAINER_NAME}"
                         def containerRunning = bat(script: """docker ps --filter name=${CONTAINER_NAME} --format "{{.Names}}""", returnStdout: true).trim()
                         if (!containerRunning) {
@@ -76,6 +68,13 @@ pipeline {
                            echo "Container ${CONTAINER_NAME} is running."
                         }
                         sleep 10
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
+                    script {                        
                         bat "docker exec ${CONTAINER_NAME} npm install"
                         bat "docker exec ${CONTAINER_NAME} npm run dev"
                         def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
