@@ -5,6 +5,13 @@ pipeline {
         CONTAINER_NAME = "${IMAGE_NAME}-container"
     }
     stages {
+        stage('Git Checkout') {
+            script {
+                    withCredentials([string(credentialsId: 'GIT_URL' , variable 'GIT_URL_SECRET')]) {
+                    git branch: 'main', url: 'GIT_URL_SECRET'
+                }
+            }
+        }
         stage('Get Current Version') {
             steps {
                script {
@@ -38,10 +45,18 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    bat "docker pull ${env.imageTag}"                    
-                        bat """
-                            docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
-                        """
+                    bat "docker pull ${env.imageTag}"
+                    def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
+                    echo "Container exists: ${containerExists}"
+                    if (containerExists) {
+                        // If the container exists, stop and remove it
+                        echo "Container ${CONTAINER_NAME} already exists. Stopping and removing it."
+                        bat "docker stop ${CONTAINER_NAME}"
+                        bat "docker rm ${CONTAINER_NAME}"
+                    }
+                    bat """
+                        docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
+                    """
                     sleep 15
                 }
             }
@@ -50,6 +65,12 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
                     script {
+                        def containerRunning = bat(script: "docker ps --filter \"name=${CONTAINER_NAME}\" --format \"{{.Names}}\"", returnStdout: true).trim()
+                        if (!containerRunning) {
+                            // If the container is not running, start it
+                            echo "Starting container ${CONTAINER_NAME}..."
+                            bat "docker start ${CONTAINER_NAME}"
+                        }
                         bat "docker exec ${CONTAINER_NAME} npm install"
                         bat "docker exec ${CONTAINER_NAME} npm run dev"
                         def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
