@@ -69,7 +69,7 @@ pipeline {
                     script {
                         def containerRunning = bat(script: """docker ps --filter name=${CONTAINER_NAME} --format "{{.Names}}""", returnStdout: true).trim()
                         echo "containerRunning: ${containerRunning}"
-                        if (!containerRunning) {
+                        if (!containerRunning || containerRunning == '') {
                             // If the container is not running, start it
                             echo "Starting container ${CONTAINER_NAME}..."
                             bat "docker start ${CONTAINER_NAME}"
