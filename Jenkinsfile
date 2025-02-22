@@ -65,7 +65,7 @@ pipeline {
                         if (!containerRunning) {
                             error "Failed to start the container ${CONTAINER_NAME}"
                         }else {
-                           echo "Container ${CONTAINER_NAME} is running."
+                           echo "Container ${containerRunning} is running."
                         }
                         sleep 10
                 }
