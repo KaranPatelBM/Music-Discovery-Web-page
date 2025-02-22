@@ -76,12 +76,14 @@ pipeline {
         }
         stage('Trigger Playwright Test Build Job') {
             steps {
-                build job: 'Playwright-Music-Discovery/master',
-                    parameters: [
-                        string(name: 'CONTAINER_NAME', value: "${CONTAINER_NAME}"),
-                        string(name: 'DOCKER_IMAGE', value: "${env.imageTag}"),
+                script {
+                    build job: 'Playwright-Music-Discovery/master', 
+                        parameters: [
+                            string(name: 'CONTAINER_NAME', value: "${CONTAINER_NAME}"),
+                            string(name: 'DOCKER_IMAGE', value: "${env.imageTag}")
+                        ], 
                         wait: true
-                    ]
+                }
             }
         }
     }
