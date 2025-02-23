@@ -53,7 +53,9 @@ pipeline {
                         bat "docker stop ${CONTAINER_NAME}"
                         bat "docker rm ${CONTAINER_NAME}"
                     }                    
-                    bat "docker-compose up -d"
+                    bat """
+                        docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
+                    """
                     def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
                     echo "Started process with PID: ${processId}"
                     currentBuild.description = processId
