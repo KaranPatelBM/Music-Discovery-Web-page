@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = "music-discovery-app"
-        CONTAINER_NAME = "${IMAGE_NAME}-container"
+        CONTAINER_NAME = "music-discovery-app-container"
     }
     stages {
         stage('Git Checkout') {
@@ -16,13 +16,11 @@ pipeline {
         }
         stage('Get Current Version') {
             steps {
-               script {
-                    // Use Jenkins build number to generate version
+                script {
                     def defaultVersion = "v1"
                     def buildNumber = env.BUILD_NUMBER.toInteger()
-                    def minorVersion = buildNumber % 100 // Keep the version in the format v1, v1.01, v1.02, ...
+                    def minorVersion = buildNumber % 100
                     def versionTag = "${defaultVersion}.${String.format('%02d', minorVersion)}"
-
                     env.VERSION_TAG = versionTag
                     echo "Current version: ${versionTag}"
                 }
@@ -39,7 +37,7 @@ pipeline {
                         bat "docker build -t ${env.imageTag} ."
                         docker.withRegistry("https://registry.hub.docker.com", 'DOCKER_CREDENTIALS') {
                             bat "docker push ${env.imageTag}"
-                        }                        
+                        }
                     }
                 }
             }
@@ -49,25 +47,18 @@ pipeline {
                 script {
                     bat "docker pull ${env.imageTag}"
                     def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
-                    echo "Container exists: ${containerExists}"
+                    
                     if (containerExists) {
-                        // If the container exists, stop and remove it
-                        echo "Container ${CONTAINER_NAME} already exists. Stopping and removing it."
+                        echo "Container ${CONTAINER_NAME} exists. Restarting it..."
                         bat "docker stop ${CONTAINER_NAME}"
                         bat "docker rm ${CONTAINER_NAME}"
                     }
-                    bat """
-                        docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
-                    """
-                    def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
-                    echo "Started process with PID: ${processId}"
-                    currentBuild.description = processId
-                    sleep 10
                     
+                    bat "docker-compose up -d"
+                    
+                    sleep 10
                     def portMapping = bat(script: "docker port ${CONTAINER_NAME}", returnStdout: true).trim()
-                    echo "Port mapping for container ${CONTAINER_NAME}: ${portMapping}"
-                    def containerLogs = bat(script: "docker logs ${CONTAINER_NAME}", returnStdout: true).trim()
-                    echo "Container logs: ${containerLogs}"
+                    echo "Port mapping: ${portMapping}"
                 }
             }
         }
@@ -84,29 +75,19 @@ pipeline {
                 script {
                     build job: 'Playwright-Music-Discovery/master', 
                         parameters: [
-                            string(name: 'CONTAINER_NAME', value: "${CONTAINER_NAME}"),
-                            string(name: 'DOCKER_IMAGE', value: "${env.imageTag}"),
-                            string(name: 'REACT_BUILD_PATH', value: "${env.WORKSPACE}")
+                            string(name: 'CONTAINER_NAME', value: "${CONTAINER_NAME}")
                         ], 
                         wait: true
                 }
             }
         }
     }
-post {
-    always {
-        script {
-            def pid = currentBuild.description
-
-            if (pid && pid.isInteger()) {
-                bat "taskkill /PID ${pid} /F"
-                echo "Killed process with PID: ${pid}"
-            } else {
-                echo "No valid PID found or process is not running."
+    post {
+        always {
+            script {
+                bat "docker stop ${CONTAINER_NAME}"
+                bat "docker rm ${CONTAINER_NAME}"
             }
-            bat "docker stop ${CONTAINER_NAME}"
         }
     }
-}
-
 }
