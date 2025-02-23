@@ -86,7 +86,7 @@ pipeline {
                         parameters: [
                             string(name: 'CONTAINER_NAME', value: "${CONTAINER_NAME}"),
                             string(name: 'DOCKER_IMAGE', value: "${env.imageTag}"),
-                            string(name: 'REACT_BUILD_PATH', value: "${WORKSPACE}/Music-Discovery-Web-page")
+                            string(name: 'REACT_BUILD_PATH', value: "${env.WORKSPACE}/Music-Discovery-Web-page")
                         ], 
                         wait: true
                 }
