@@ -46,14 +46,14 @@ pipeline {
             steps {
                 script {
                     bat "docker pull ${env.imageTag}"
-                    def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
-                    echo "containerExists: ${containerExists}"
+                    // def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
+                    // echo "containerExists: ${containerExists}"
                     
-                    if (containerExists) {
-                        echo "Container ${CONTAINER_NAME} exists. Restarting it..."
-                        bat "docker stop ${CONTAINER_NAME}"
-                        bat "docker rm ${CONTAINER_NAME}"
-                    }
+                    // if (containerExists) {
+                    //     echo "Container ${CONTAINER_NAME} exists. Restarting it..."
+                    //     bat "docker stop ${CONTAINER_NAME}"
+                    //     bat "docker rm ${CONTAINER_NAME}"
+                    // }
                     
                     bat "docker-compose up -d"
                     def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
