@@ -1,7 +1,5 @@
-version: "3.8"
-
 services:
-  react-app:
+  music-discovery-app:
     container_name: music-discovery-app-container
     build: .
     ports:
