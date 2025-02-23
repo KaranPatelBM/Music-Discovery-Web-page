@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  react-app:
+    container_name: music-discovery
+    build: .
+    ports:
+      - "8563:8563"
+    volumes:
+      - .:/app/Music-Discovery-Web-page
+      - /app/Music-Discovery-Web-page/node_modules
+    command: ["npm", "start"]

@@ -8,7 +8,7 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'GIT_URL', variable: 'GIT_URL_SECRET')]) {                    
+                    withCredentials([string(credentialsId: 'MD_WEB_PAGE_GIT_URL', variable: 'GIT_URL_SECRET')]) {                    
                         git branch: 'main', url: "${env.GIT_URL_SECRET}"
                     }
                 }
@@ -63,6 +63,11 @@ pipeline {
                     echo "Started process with PID: ${processId}"
                     currentBuild.description = processId
                     sleep 10
+                    
+                    def portMapping = bat(script: "docker port ${CONTAINER_NAME}", returnStdout: true).trim()
+                    echo "Port mapping for container ${CONTAINER_NAME}: ${portMapping}"
+                    def containerLogs = bat(script: "docker logs ${CONTAINER_NAME}", returnStdout: true).trim()
+                    echo "Container logs: ${containerLogs}"
                 }
             }
         }
