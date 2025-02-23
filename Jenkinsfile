@@ -49,7 +49,6 @@ pipeline {
                     def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
                     echo "Container exists: ${containerExists}"
                     if (containerExists) {
-                        // If the container exists, stop and remove it
                         echo "Container ${CONTAINER_NAME} already exists. Stopping and removing it."
                         bat "docker stop ${CONTAINER_NAME}"
                         bat "docker rm ${CONTAINER_NAME}"

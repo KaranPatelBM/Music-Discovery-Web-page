@@ -8,5 +8,5 @@ services:
       - "8563:8563"
     volumes:
       - .:/app/Music-Discovery-Web-page
-      - /app/Music-Discovery-Web-page/node_modules
     command: ["npm", "start"]
+    restart: always
