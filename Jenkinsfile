@@ -46,15 +46,14 @@ pipeline {
             steps {
                 script {
                     bat "docker pull ${env.imageTag}"
-                    // def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
-                    // echo "containerExists: ${containerExists}"
-                    
-                    // if (containerExists) {
-                    //     echo "Container ${CONTAINER_NAME} exists. Restarting it..."
-                    //     bat "docker stop ${CONTAINER_NAME}"
-                    //     bat "docker rm ${CONTAINER_NAME}"
-                    // }
-                    
+                    def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
+                    echo "Container exists: ${containerExists}"
+                    if (containerExists) {
+                        // If the container exists, stop and remove it
+                        echo "Container ${CONTAINER_NAME} already exists. Stopping and removing it."
+                        bat "docker stop ${CONTAINER_NAME}"
+                        bat "docker rm ${CONTAINER_NAME}"
+                    }                    
                     bat "docker-compose up -d"
                     def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
                     echo "Started process with PID: ${processId}"
@@ -100,8 +99,8 @@ pipeline {
                 } else {
                     echo "No valid PID found or process is not running."
                 }
-                bat "docker stop ${CONTAINER_NAME}"
-                bat "docker rm ${CONTAINER_NAME}"
+                // bat "docker stop ${CONTAINER_NAME}"
+                // bat "docker rm ${CONTAINER_NAME}"
             }
         }
     }
