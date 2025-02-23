@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     bat "docker pull ${env.imageTag}"
-                    def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format {{.Names}}", returnStdout: true).trim()
+                    def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format \"{{.ID}}\"", returnStdout: true).trim()
                     echo "Container exists: ${containerExists}"
                     if (containerExists) {
                         echo "Container ${CONTAINER_NAME} already exists. Stopping and removing it."
