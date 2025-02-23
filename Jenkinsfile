@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = "music-discovery-app"
-        CONTAINER_NAME = "music-discovery-app-container"
+        CONTAINER_NAME = "${IMAGE_NAME}-container"
     }
     stages {
         stage('Git Checkout') {
@@ -55,10 +55,15 @@ pipeline {
                     }
                     
                     bat "docker-compose up -d"
+                    def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
+                    echo "Started process with PID: ${processId}"
+                    currentBuild.description = processId
                     
                     sleep 10
                     def portMapping = bat(script: "docker port ${CONTAINER_NAME}", returnStdout: true).trim()
                     echo "Port mapping: ${portMapping}"
+                    def containerLogs = bat(script: "docker logs ${CONTAINER_NAME}", returnStdout: true).trim()
+                    echo "Container logs: ${containerLogs}"
                 }
             }
         }
@@ -75,7 +80,9 @@ pipeline {
                 script {
                     build job: 'Playwright-Music-Discovery/master', 
                         parameters: [
-                            string(name: 'CONTAINER_NAME', value: "${CONTAINER_NAME}")
+                            string(name: 'CONTAINER_NAME', value: "${CONTAINER_NAME}"),
+                            string(name: 'DOCKER_IMAGE', value: "${env.imageTag}"),
+                            string(name: 'REACT_BUILD_PATH', value: "${env.WORKSPACE}")
                         ], 
                         wait: true
                 }
@@ -85,6 +92,13 @@ pipeline {
     post {
         always {
             script {
+                def pid = currentBuild.description
+                if (pid && pid.isInteger()) {
+                    bat "taskkill /PID ${pid} /F"
+                    echo "Killed process with PID: ${pid}"
+                } else {
+                    echo "No valid PID found or process is not running."
+                }
                 bat "docker stop ${CONTAINER_NAME}"
                 bat "docker rm ${CONTAINER_NAME}"
             }
