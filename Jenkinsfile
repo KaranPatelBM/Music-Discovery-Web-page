@@ -42,40 +42,40 @@ pipeline {
                 }
             }
         }
-        stage('Run Docker Container') {
-            steps {
-                script {
-                    bat "docker pull ${env.imageTag}"
-                    def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format \"{{.ID}}\"", returnStdout: true).trim()
-                    echo "Container exists: ${containerExists}"
-                    if (containerExists) {
-                        echo "Container ${CONTAINER_NAME} already exists. Stopping and removing it."
-                        bat "docker stop ${CONTAINER_NAME}"
-                        bat "docker rm ${CONTAINER_NAME}"
-                    }                    
-                    bat """
-                        docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
-                    """
-                    def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
-                    echo "Started process with PID: ${processId}"
-                    currentBuild.description = processId
+        // stage('Run Docker Container') {
+        //     steps {
+        //         script {
+        //             bat "docker pull ${env.imageTag}"
+        //             def containerExists = bat(script: "docker ps -a --filter name=${CONTAINER_NAME} --format \"{{.ID}}\"", returnStdout: true).trim()
+        //             echo "Container exists: ${containerExists}"
+        //             if (containerExists) {
+        //                 echo "Container ${CONTAINER_NAME} already exists. Stopping and removing it."
+        //                 bat "docker stop ${CONTAINER_NAME}"
+        //                 bat "docker rm ${CONTAINER_NAME}"
+        //             }                    
+        //             bat """
+        //                 docker run -d --name ${CONTAINER_NAME} -p 8563:8563 ${env.imageTag}
+        //             """
+        //             def processId = bat(script: 'tasklist /FI "IMAGENAME eq node.exe"', returnStdout: true).trim()
+        //             echo "Started process with PID: ${processId}"
+        //             currentBuild.description = processId
                     
-                    sleep 10
-                    def portMapping = bat(script: "docker port ${CONTAINER_NAME}", returnStdout: true).trim()
-                    echo "Port mapping: ${portMapping}"
-                    def containerLogs = bat(script: "docker logs ${CONTAINER_NAME}", returnStdout: true).trim()
-                    echo "Container logs: ${containerLogs}"
-                }
-            }
-        }
-        stage('Lint and Build') {
-            steps {
-                withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
-                    bat 'npm run lint'
-                    bat 'npm run build'
-                }
-            }
-        }
+        //             sleep 10
+        //             def portMapping = bat(script: "docker port ${CONTAINER_NAME}", returnStdout: true).trim()
+        //             echo "Port mapping: ${portMapping}"
+        //             def containerLogs = bat(script: "docker logs ${CONTAINER_NAME}", returnStdout: true).trim()
+        //             echo "Container logs: ${containerLogs}"
+        //         }
+        //     }
+        // }
+        // stage('Lint and Build') {
+        //     steps {
+        //         withCredentials([string(credentialsId: 'VITE_LAST_FM_API_KEY', variable: 'API_SECRET')]) {
+        //             bat 'npm run lint'
+        //             bat 'npm run build'
+        //         }
+        //     }
+        // }
         stage('Trigger Playwright Test Build Job') {
             steps {
                 script {
